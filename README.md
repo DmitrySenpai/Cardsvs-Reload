@@ -1,4 +1,4 @@
-# Карты против всех (Reload)
+# Карты Против Всех (Reload)
 
 ![image](https://github.com/DmitrySenpai/Cardsvs-Reload/assets/2939460/cf9f732e-ecc5-4a97-b85e-75ebfd0ab131)
 
