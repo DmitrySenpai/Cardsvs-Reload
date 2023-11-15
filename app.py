@@ -1,7 +1,8 @@
 import threading
-from flask import Flask, render_template
+from flask import Flask
 
 from database import database
+from command import command
 from web_server import web_server
 from ajax import ajax
 from function import function
@@ -14,6 +15,7 @@ class server:
         self.function = function()
         self.user_cache = {}
         self.database = database()
+        self.command = command()
         self.assest = {}
         self.assest["card"] = []
         self.assest["words"] = []
@@ -33,7 +35,20 @@ class server:
         self.web_server = web_server()
         self.server_shutdown = "False"
 
+    def cmd_input(self):
+        while True:
+            if self.server_shutdown == "True":
+                break
+            cmd = input().split(" ")
+            if hasattr(self.command, cmd[0]):
+                getattr(self.command, cmd[0])(self, cmd[1:])
+            else:
+                print("Такой команды нет. Попробуйте ввести \"help\", чтобы получить список доступных команд.")
+
     def run(self):
+        self.cmdinput_thread = threading.Thread(target=self.cmd_input)
+        self.cmdinput_thread.start()
+
         self.webserver = threading.Thread(target=self.web_server.start, args=[self])
         self.webserver.start()
 

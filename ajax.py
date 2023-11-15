@@ -1,4 +1,7 @@
 from flask import make_response, request
+import re
+import json
+import hashlib
 
 class ajax:
     @staticmethod
@@ -17,18 +20,13 @@ class ajax:
                 if id_room:
                     room_get = self.room_game[id_room]
                     owner = 0
-                    print(room_get)
                     if room_get["owner"] == get_user[0][0]:
                         owner = 1
                     if room_get["status"] == "waiting":
                         return f'name="{get_user[0][1]}";Main(1);SeachFr("{id_room}", {len(room_get["player"])}, {owner})'
                     else:
                         welcome = ""
-                        #if room_get["player"][get_user[0][0]]["welcome"] == 0:
-                        #    self.room_game[id_room]["player"][get_user[0][0]]["welcome"] = 1
-                        #    welcome = "Fight_start();"
                         statusroom = self.room_system.status_room(self, id_room, get_user[0][0])
-                        #main_load = "Main(1);"
                         if self.room_game[id_room]["status"] == "play":
                             main_load = ""
                         return f'name="{get_user[0][1]}";{main_load}{welcome}{statusroom}'
@@ -36,6 +34,9 @@ class ajax:
                     return f'name="{get_user[0][1]}";Main(1)'
         else:
             return "Main(1)"
+    @staticmethod
+    def menuswich(self, args):
+        return f"Smenu_sel={args['name1']};Main(1)"
     @staticmethod
     def hod(self, args):
         get_user = self.database.user_get_hash(request.cookies.get('hash'))
@@ -50,15 +51,16 @@ class ajax:
 
             self.room_game[id_room]["timer"] = 10
             self.room_game[id_room]["status_2"] = "wait_2"
+            self.room_game[id_room]["fite_card_sel"] = int(args["name1"])
 
             self.room_game[id_room]["player"][select_card]["source"] = self.room_game[id_room]["player"][select_card]["source"] + 1
 
-            return "Razviazka(" + args["name1"] + ", 1); setTimeout(function () { Fight_cards('[]', 2); }, 1500);"
+            return "Razviazka(" + args["name1"] + ", 1); card_sel=" + args["name1"] + "; setTimeout(function () { Fight_cards('[]', 2); }, 1500);"
         else:
             return False
     @staticmethod
     def vhod(self, args):
-        if self.database.user_login(args["name1"], args["name2"]):
+        if self.database.user_login(args["name1"], hashlib.md5(args["name2"].encode()).hexdigest()):
             response = make_response(f'name="{args["name1"]}";Main(1)')
             hash_new = self.function.generate_random_string()
             self.database.user_set_hash(args["name1"], hash_new)
@@ -102,3 +104,26 @@ class ajax:
         except:
             self.search_room.append(get_user[0][0])
             return "Seachgame(1);"
+    @staticmethod
+    def reg(self, args):
+        data = json.loads(args["name1"])
+
+        if len(data[0]) == 0 or len(data[1]) == 0 or len(data[2]) == 0:
+            return "alert('Все поля должны быть заполнены!')"
+        if not re.match(r"^[a-zA-Z]+$", data[0]):
+            return "alert('Ошибка регистрации, в нике должны быть только английские символы!')"
+        if self.database.user_select(data[0]):
+            return "alert('Этот ник уже используется!')"
+        if not re.match(r"^[a-zA-Z0-9+._-]+@[a-zA-Z0-9+._-]+\.[a-zA-Z]+$", data[1]):
+            return "alert('Email-адрес невалиден!')"
+        if self.database.user_select_email(data[1]):
+            return "alert('Этот email-адрес уже зарегистирован!')"
+        if len(data[2]) < 8:
+            return "alert('Пароль должен содержать больше 8 символов!')"
+        
+        if self.database.user_reg(data[0], data[1], hashlib.md5(data[2].encode()).hexdigest()):
+            response = make_response("alert('Аккаунт был успешно создан!');location.reload();")
+            hash_new = self.function.generate_random_string()
+            self.database.user_set_hash(data[0], hash_new)
+            response.set_cookie('hash', hash_new)
+            return response

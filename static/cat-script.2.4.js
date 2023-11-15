@@ -13,13 +13,8 @@ if (!self.__WB_pmw) { self.__WB_pmw = function (obj) { this.__WB_source = obj; r
   $(document).ready(function () {
     if (document.all) { StupedIE(); }
     localStorage.windowid = windowid;
-    //$.ionSound({sounds:[{name:"info"}],path: "sound/",multiPlay: true,volume: "1.0"});
-    //var audio = new Audio('/sound/info.mp3');
-    //audio.play();
     Load(1);
-    //Slovarnew();
     timeAjax = setInterval("Load();", 2000);
-    //Main(1)
     if ($("#start_text_1").height() > 40) { have_font = 0; }
   });
 
@@ -48,7 +43,8 @@ if (!self.__WB_pmw) { self.__WB_pmw = function (obj) { this.__WB_source = obj; r
   var skill_mod2 = -1; //модификатор способности
   var skill_inp = ''; //что это?
   var guest_ved = 0;
-
+  var Smenu_sel = 1;
+  var notification_audio = new Audio('/sound/info.mp3');
 
   function Klik(tip, s1, s2, s3, s4, s5, s6) {
     if (!load_in_klik) {
@@ -221,7 +217,7 @@ if (!self.__WB_pmw) { self.__WB_pmw = function (obj) { this.__WB_source = obj; r
         break;
       case 4:
         var stl_pls = ['', '']; if (have_font < 1) { stl_pls[0] = 'font-size:14px;'; stl_pls[1] = 'font-size:12px;'; }
-        text = '<div class="content1_b1">Разработчики:</div><div class="razrab_b1" style="margin-top:0px;' + stl_pls[0] + '"><div style="height:60px;width:60px;background:url(img/razrab_icon1.png);float:left;"></div><div style="float:left;margin-left:11px"><b>Сергей Андреев</b><br><i>я очень занят, еду на вело-<br>сипеде под дождем</i></div><div class="razrab_p1" style="float:left;' + stl_pls[1] + '">Идея, дизайн, реклама и продвижение</div></div><div class="razrab_b1" style="' + stl_pls[0] + '"><div style="height:60px;width:60px;background:url(img/razrab_icon2.png);float:left;"></div><div style="float:left;margin-left:11px"><b>Александр Румянцев</b><br><i>а может на другом хости-<br>нге все само починится?</i></div><div class="razrab_p1" style="float:left;' + stl_pls[1] + '">Программирование, верстка, тестирование</div></div><div class="razrab_mail"><i class="fa fa-envelope-o"></i> admin@cardsvs.ru</div';
+        text = '<div class="content1_b1">Разработчики:</div><div class="razrab_b1"' + stl_pls[0] + '"><div><b>Сергей Андреев</b><br><i>я очень занят, еду на вело-<br>сипеде под дождем</i></div><div class="razrab_p1">Идея, дизайн, реклама и продвижение</div></div><div class="razrab_b1"><div><b>Александр Румянцев</b><br><i>а может на другом хости-<br>нге все само починится?</i><div>Программирование, верстка, тестирование</div></div></div>';
         break;
     }
 
@@ -248,8 +244,8 @@ if (!self.__WB_pmw) { self.__WB_pmw = function (obj) { this.__WB_source = obj; r
 
   function Budilnick() {
     //$.ionSound.play("door_bell");
+    notification_audio.play();
     alert("Игра началась!");
-
   }
 
   function SuperAnimate() {
@@ -277,7 +273,7 @@ if (!self.__WB_pmw) { self.__WB_pmw = function (obj) { this.__WB_source = obj; r
     var bonus = '<div style="margin: 20px 0 0 0px;"><button style="" id="end_bonus" class="end_bonus animated bounce2" onclick="KnopkaIschezai(\'end_bonus\')";><div style="float:left;font-size:18px;line-height:38px;">вы получили: </div>' + spell[nbonus] + '<div style="float:left;font-size:18px;line-height:38px;">1 шт.</div></button></div>';
 
     if (!nbonus) {
-      $("#fite_card2_m").html('<div class="fite_rez_b1"><div class="fite_rez1">ПОБЕДИТЕЛЬ:</div><div class="fite_rez2">' + namewin + '</div><div class="fite_rez3">' + text + '</div></div>');
+      $("#fite_card2_m").html('<div class="fite_rez_b1"><div class="fite_rez1">ПОБЕДИТЕЛЬ:</div><div class="fite_rez2">' + namewin + '</div><div class="fite_rez3">' + text + '</div><div class="fite_rez4" style="margin-top:15px;">Новая игра начнется через: <div id="next_game"></div></div></div>');
     } else {
 
       if (name == namewin || randfr != 1) {
@@ -398,7 +394,8 @@ if (!self.__WB_pmw) { self.__WB_pmw = function (obj) { this.__WB_source = obj; r
 
 
   function SaveReg() {
-    Klik("reg", $("#reg_name").val(), $("#reg_email").val(), $("#reg_password").val());
+    Klik("reg", JSON.stringify([$("#reg_name").val(), $("#reg_email").val(), $("#reg_password").val()]));
+    //Klik("reg", $("#reg_name").val(), $("#reg_email").val(), $("#reg_password").val());
   }
 
   function Text(text) {
@@ -566,7 +563,7 @@ if (!self.__WB_pmw) { self.__WB_pmw = function (obj) { this.__WB_source = obj; r
 
   function Seachgame(kol) {
     clearTimeout(seach);
-    $("#content2").html('<div class="seach_game"><div class="seach_b1">Идет поиск</div><div class="seach_b2" id="seach_b2"></div><br><div id="seach_user_kol" class="seach_b3">Игроков: ' + kol + '/3</div><input type=submit class="seach_k1"  onclick=Klik("otmena") value="отмена"></input></div>');
+    $("#content2").html('<div class="seach_game"><div class="seach_b1">Идет поиск</div><div class="seach_b2" id="seach_b2"></div><br><input type=submit class="seach_k1"  onclick=Klik("otmena") value="отмена"></input></div>');
     SeachgameProTimer();
   }
 
@@ -624,7 +621,7 @@ if (!self.__WB_pmw) { self.__WB_pmw = function (obj) { this.__WB_source = obj; r
 
     if (first) {
       $("#custom_body").html('<center><div id="main1" class="main1"><div class="logotip1"></div><div class="logotip1_exit" id="logotip1_exit"></div><div class="logotip1_usr" id="logotip1_usr"></div></div><div id="content" class="content_notfite"><div class="content_mb1_menu" id="content1_menu">' + mm + '</div><div class="content_mb1" id="content1"></div><div class="content_mb2" id="content2"></div><div class="content_mb3" id="content3">TEST</div><div class="vkbanner" onclick=location.href="https://web.archive.org/web/20220701173013/https://vk.com/cardscad"><div class="vkbanner_b1">Мы в VK</div><div class="vkbanner_b2" ' + stl_pls[0] + '>Заходи, другом будешь!</div></div></div></center>');
-      SMenu(1);
+      SMenu(Smenu_sel, '[]');
     }
     if (!name) {
       $('.players_st_b1').css({ "font-size": "20px", "margin": "4px 0 0 0", "height": "23px", "line-height": "23px" });
@@ -648,7 +645,7 @@ if (!self.__WB_pmw) { self.__WB_pmw = function (obj) { this.__WB_source = obj; r
     }
     if (have_font < 1) { $(".players_st_b1").css({ "font-size": "18px" }); }
 
-    if (first && !name) { Banner_test(); }
+    //if (first && !name) { Banner_test(); }
   }
 
   function Avklik(id, tip, tip2, i) {
@@ -1131,14 +1128,13 @@ if (!self.__WB_pmw) { self.__WB_pmw = function (obj) { this.__WB_source = obj; r
   }
 
   function Guest_help2(n, t, vdn, mod) {
-    if (!n) { return; }
+    //if (!n) { return; }
     guest_ved = t;
-    n--;
-    var av = ['', 'dok3', 'gop1', 'pol1', 'boy2', 'sec1'];
-    var name = ['', 'Остроглазый доктор', 'Веселый гопник', 'Честный полицеский', 'Дима из 5Б', 'Секретарша не твоя']
-    var text1 = ['', 'Мистер ' + vdn + ', вы не выбрали ваш ответ.', 'Слыш, ' + vdn + ', ты че ответ не выбрал?', 'Гражданин ' + vdn + ', почему ответ не выбираем?', vdn + ' лалка и не выбрал)', vdn + ', ах так? Значит ты не выбрал?'];
-    var text2 = ['', 'Теперь за вас буду выбирать я.', 'Щас выберу сам, внатуре.', 'Ну ничего, сейчас разберемся.', 'Сейчас выбиру как царь!', 'Так уж и быть, выберу за тебя)'];
-    var text3 = ['', 'Ахахах). Обхохочешься!', 'Хаха, вот это чёткий прикол))', 'Отлично, так и запишем!', 'Азазазаз, я вас затралил))', 'Ну разве я не молодец?:D'];
+    //n--;
+    var av = ['goose', 'dok3', 'gop1', 'pol1', 'boy2', 'sec1'];
+    var text1 = [vdn + ', а я не понял?!', 'Мистер ' + vdn + ', вы не выбрали ваш ответ.', 'Слыш, ' + vdn + ', ты че ответ не выбрал?', 'Гражданин ' + vdn + ', почему ответ не выбираем?', vdn + ' лалка и не выбрал)', vdn + ', ах так? Значит ты не выбрал?'];
+    var text2 = ['Гусь спешит на помощь!', 'Теперь за вас буду выбирать я.', 'Щас выберу сам, внатуре.', 'Ну ничего, сейчас разберемся.', 'Сейчас выбиру как царь!', 'Так уж и быть, выберу за тебя)'];
+    var text3 = ['Я гусь! Я пожалуй...', 'Ахахах). Обхохочешься!', 'Хаха, вот это чёткий прикол))', 'Отлично, так и запишем!', 'Азазазаз, я вас затралил))', 'Ну разве я не молодец?:D'];
     if (have_font < 1) { var stl_pls1 = 'font-size:18px;'; }
     var d3 = '<div id="ggvd_t1" class="katkat katkat1" style="margin: 20px 0px 0px -160px;' + stl_pls1 + '">' + text1[t] + '</div>';
 
@@ -1151,17 +1147,15 @@ if (!self.__WB_pmw) { self.__WB_pmw = function (obj) { this.__WB_source = obj; r
         }, 200);
       });
 
-      if (1 == 1) {
-        setTimeout(function () {
-          $("#ggvd_t1").removeClass('animated bounce2');
-          $("#ggvd_t1").css({ "opacity": "1" });
-          $("#ggvd_t1").animate({ "opacity": "0" }, 600, 'swing', function () {
-            $("#ggvd_t1").html(text2[t]);
-            $("#ggvd_t1").addClass('animated bounce2');
-            setTimeout(function () { Guest_help_go(n, text3[t]); }, 1600);
-          });
-        }, 4500);
-      }
+      setTimeout(function () {
+        $("#ggvd_t1").removeClass('animated bounce2');
+        $("#ggvd_t1").css({ "opacity": "1" });
+        $("#ggvd_t1").animate({ "opacity": "0" }, 600, 'swing', function () {
+          $("#ggvd_t1").html(text2[t]);
+          $("#ggvd_t1").addClass('animated bounce2');
+          setTimeout(function () { Guest_help_go(n, text3[t]); }, 1600);
+        });
+      }, 4500);
 
     } else {
       $("#vedguest_bf1").css({ "margin": "0 0 0 0" });
