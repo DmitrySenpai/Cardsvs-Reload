@@ -58,6 +58,7 @@ class room_system:
                         self.room_game[id_room]["guest_assistant"] = -1
                         self.room_game[id_room]["timer"] = -1
                         self.room_game[id_room]["status_2"] = "step"
+                        self.room_game[id_room]["leading"] = 0
                         self.room_game[id_room]["round"] = self.room_game[id_room]["round"] + 1
                         self.room_game[id_room]["fite_card"] = []
                     elif self.room_game[id_room]["status_2"] == "select" and self.room_game[id_room]["fite_card_sel"] == -1:
@@ -157,8 +158,6 @@ class room_system:
         # $("#next_game").html('1')
 
         if self.room_game[room_id]["winner"] == -1:
-
-            print(self.database.user_get_id(self.room_game[room_id]["leading"]))
 
             code = f'vopros={self.room_game[room_id]["word"]};timeh={self.room_game[room_id]["timer"]};'
             code = code + "if (typeof round_get == 'undefined') { round_get=0; Budilnick(); };"

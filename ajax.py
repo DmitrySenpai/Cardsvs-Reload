@@ -44,6 +44,7 @@ class ajax:
 
         if self.room_game[id_room]["status_2"] == "step":
             self.room_game[id_room]["fite_card"].append({"id_user": get_user[0][0], "id_card": self.room_game[id_room]["player"][get_user[0][0]]["card"][int(args["name1"])-1]["id"]})
+            self.room_game[id_room]["player"][get_user[0][0]]["card"].pop(int(args["name1"])-1)
             return self.function.card_list(self, id_room)
         elif self.room_game[id_room]["status_2"] == "select" and self.room_game[id_room]["leading"] == get_user[0][0]:
             select_card = self.room_game[id_room]["fite_card"][int(args["name1"])]["id_user"]
@@ -61,9 +62,10 @@ class ajax:
     @staticmethod
     def vhod(self, args):
         if self.database.user_login(args["name1"], hashlib.md5(args["name2"].encode()).hexdigest()):
-            response = make_response(f'name="{args["name1"]}";Main(1)')
             hash_new = self.function.generate_random_string()
-            self.database.user_set_hash(args["name1"], hash_new)
+            user_login = self.database.user_select_email(args["name1"])[0]
+            response = make_response(f'name="{user_login[1]}";Main(1)')
+            self.database.user_set_hash(user_login[1], hash_new)
             response.set_cookie('hash', hash_new)
             return response
         else:
@@ -110,7 +112,7 @@ class ajax:
 
         if len(data[0]) == 0 or len(data[1]) == 0 or len(data[2]) == 0:
             return "alert('Все поля должны быть заполнены!')"
-        if not re.match(r"^[a-zA-Z]+$", data[0]):
+        if not re.match(r'^[a-zA-Z0-9.,_-]+$', data[0]):
             return "alert('Ошибка регистрации, в нике должны быть только английские символы!')"
         if self.database.user_select(data[0]):
             return "alert('Этот ник уже используется!')"
