@@ -99,11 +99,13 @@ class ajax:
         get_user = self.database.user_get_hash(request.cookies.get('hash'))
         if args["name1"] == "true":
             id_room = self.function.user_in_room(self, get_user[0][0])
-            if self.room_game[id_room]["owner"] == get_user[0][0]:
+            if self.room_game[id_room]["owner"] == get_user[0][0] and len(self.room_game[id_room]["player"]) <= 2:
                 self.room_game[id_room]["status"] = "play"
                 return "Fight(1, 1)"
             else:
                 return "False"
+        else:
+            return "False"
     @staticmethod
     def seach(self, args):
         get_user = self.database.user_get_hash(request.cookies.get('hash'))

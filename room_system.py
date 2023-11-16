@@ -12,8 +12,12 @@ class room_system:
             
             owner_random = False
             for x in list(self.room_game[id_room]["player"]):
-                if not self.function.user_is_online(self, x) or self.function.user_in_room(self, x) != id_room:
+                afk = False
+                if int(time.time())-self.user_cache[x]["last"] > self.config["kick_inactivity"]:
+                    afk = True
+                if afk or self.function.user_in_room(self, x) != id_room:
                     self.room_game[id_room]["player"].pop(x)
+                    self.user_cache.pop(x)
                     if x == self.room_game[id_room]["owner"]:
                         owner_random = True
                 elif self.room_game[id_room]["winner"] == -1 and self.room_game[id_room]["player"][x]["source"] == 10 and self.room_game[id_room]["status_2"] == "step":
@@ -166,6 +170,7 @@ class room_system:
 
         # FiteRezult("tester1") - (ИМЯ Победителя, ИД_приза)
         # $("#next_game").html('1')
+        self.function.user_cahce_write(self, user_id, room_id)
 
         if self.room_game[room_id]["winner"] == -1 and self.room_game[room_id]["status_2"] != "pause":
             code = f'round_pause=0; vopros={self.room_game[room_id]["word"]};timeh={self.room_game[room_id]["timer"]};'
@@ -187,7 +192,7 @@ class room_system:
             code = code + "if (card_count !== " + str(card_count) + " ) { " + card_list + "; card_count=" + str(card_count) + " }"
         elif self.room_game[room_id]["status_2"] == "pause" and self.room_game[room_id]["winner"] == -1:
             code = "if (typeof round_pause == 'undefined') { round_pause=0; };"
-            code = code + "if (round_pause == 0) { round_pause=1; hod=1; gst=3; gamePause('" + room_id + "'); }"
+            code = code + "if (round_pause == 0) { round_pause=1; hod=1; gst=3; gamePause('" + str(room_id) + "'); }"
         else:
             code = "round_pause=0; if (typeof round_status == 'undefined') { round_status=0 };"
             code = code + 'if (round_status !== "winner") { round_status="winner"; FiteRezult("' + self.database.user_get_id(self.room_game[room_id]["winner"])[1] + '") };'
