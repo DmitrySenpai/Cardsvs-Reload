@@ -254,6 +254,14 @@ if (!self.__WB_pmw) { self.__WB_pmw = function (obj) { this.__WB_source = obj; r
     });
   }
 
+  function gamePause(id) {
+    clearTimeout(timedel);
+    $("#fite_card2_m").html('<div class="fite_rez_b1"><div class="fite_rez1" style="margin-top:20px;">ТАЙМАУТ ИГРЫ</div><div class="fite_rez3" style="margin-top:12px;">В комнате меньше трех игроков. Игра продолжиться когда случай игрок подключиться.</div><div class="fite_rez4" style="margin-top:15px;">Вы так же можете сыграть с друзьями, отправьте им эту ссылку:<div id="seach_fr_b1"><input type="text" maxlength="50" class="seach_fr_scr" value="http://' + location.hostname + location.pathname + '?party=' + id + '" readonly=""></div></div></div>');
+    $("#fite_timer").html('');
+    $("#fite_blsr1_b5").css({ 'display': 'none' });
+
+  }
+
   function FiteRezult(namewin, nbonus) {
     clearTimeout(timedel);
     var text = '';

@@ -14,7 +14,7 @@ class ajax:
                     self.search_room.remove(get_user[0][0])
                     return self.room_system.join_room(self, id_room, get_user[0][0])
                 else:
-                    return "1"
+                    return "if (typeof room_search == 'undefined') { room_search=1; Main(1); Seachgame(1); };"
             else:
                 id_room = self.function.user_in_room(self, get_user[0][0])
                 if id_room:
@@ -25,18 +25,21 @@ class ajax:
                     if room_get["status"] == "waiting":
                         return f'name="{get_user[0][1]}";Main(1);SeachFr("{id_room}", {len(room_get["player"])}, {owner})'
                     else:
-                        welcome = ""
                         statusroom = self.room_system.status_room(self, id_room, get_user[0][0])
                         if self.room_game[id_room]["status"] == "play":
                             main_load = ""
-                        return f'name="{get_user[0][1]}";{main_load}{welcome}{statusroom}'
+                        return f'name="{get_user[0][1]}";{main_load}{statusroom}'
                 else:
                     return f'name="{get_user[0][1]}";Main(1)'
         else:
             return "Main(1)"
     @staticmethod
     def menuswich(self, args):
-        return f"Smenu_sel={args['name1']};Main(1)"
+        get_user = self.database.user_get_hash(request.cookies.get('hash'))
+        if get_user[0][0] in self.search_room:
+            return f"Smenu_sel={args['name1']}; Main(1); Seachgame(1);"
+        else:
+            return f"Smenu_sel={args['name1']}; Main(1)"
     @staticmethod
     def hod(self, args):
         get_user = self.database.user_get_hash(request.cookies.get('hash'))
@@ -72,8 +75,15 @@ class ajax:
             return 'alert("Не правильный логин или пароль!")'
     @staticmethod
     def exit(self, args):
-        response = make_response(f'name="";Main(1)')
-        response.set_cookie('hash', '', expires=0)
+        get_user = self.database.user_get_hash(request.cookies.get('hash'))
+        id_room = self.function.user_in_room(self, get_user[0][0])
+        if id_room:
+            self.room_game[id_room]["player"].pop(get_user[0][0])
+            self.user_cache[get_user[0][0]]["room"] = False
+            response = "Main(1)"
+        else:
+            response = make_response(f'name="";Main(1)')
+            response.set_cookie('hash', '', expires=0)
         return response
     @staticmethod
     def otmena(self, args):
@@ -105,9 +115,12 @@ class ajax:
                 return "1"
         except:
             self.search_room.append(get_user[0][0])
-            return "Seachgame(1);"
+            return "Seachgame(1); room_search=1;"
     @staticmethod
     def reg(self, args):
+        if not self.config["register"]:
+            return "alert('Регистрация на сайте выключена администратором!')"
+
         data = json.loads(args["name1"])
 
         if len(data[0]) == 0 or len(data[1]) == 0 or len(data[2]) == 0:

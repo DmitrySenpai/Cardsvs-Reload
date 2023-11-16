@@ -5,7 +5,7 @@ import re
 class command:
     @staticmethod
     def help(self, args):
-        print("stop - выключает сервер\nsetpsswd <user_login> <password> - смена пароля\nnewuser <login> <email> <password> - создает нового пользователя\n")
+        print("stop - выключает сервер\nsetpsswd <user_login> <password> - смена пароля\nnewuser <login> <email> <password> - создает нового пользователя\nregsystem - включает\\выключает регистарцию")
     #@staticmethod
     #def stop(self, args):
     #    self.server_shutdown = "True"
@@ -51,3 +51,11 @@ class command:
                 print(f"Пользователь успешно зарегистрирован.\nПароль: {password}")
         else:
             print("Произошла ошибка во время создание нового пользователя!")
+    @staticmethod
+    def regsystem(self, args):
+        if not self.config["register"]:
+            self.config["register"] = True
+            print("Система регистрации включена")
+        else:
+            self.config["register"] = False
+            print("Система регистрации выключена")

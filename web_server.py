@@ -5,7 +5,7 @@ class web_server:
     def start(self):
         @self.app.route('/')
         def index():
-            return render_template("index.html")
+            return render_template("index.html", version=self.version)
         
         @self.app.route('/<path:filename>') 
         def send_file(filename): 
@@ -31,4 +31,4 @@ class web_server:
                 text = text + f"'{x}', "
             text = text[:-2] + "]"
             return text
-        self.app.run()
+        self.app.run(host=self.config["ip"], port=self.config["port"])

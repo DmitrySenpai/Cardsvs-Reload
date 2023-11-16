@@ -1,5 +1,6 @@
 import threading
 from flask import Flask
+import json
 
 from database import database
 from command import command
@@ -10,6 +11,8 @@ from room_system import room_system
 
 class server:
     def __init__(self):
+        with open('config.json', encoding='utf-8') as x:
+            self.config = json.load(x)
         self.app = Flask(__name__)
         self.ajax = ajax()
         self.function = function()
@@ -19,6 +22,7 @@ class server:
         self.assest = {}
         self.assest["card"] = []
         self.assest["words"] = []
+        self.version = "1.2"
 
         with open('assest/card.txt', 'r', encoding='utf-8') as file:
             for line in file:
@@ -51,6 +55,9 @@ class server:
 
         self.webserver = threading.Thread(target=self.web_server.start, args=[self])
         self.webserver.start()
+
+        if self.function.check_update(self):
+            print("\n\nВышла новая версия сервера 'Cardsvs-Reload'.\nСкачать вы можете тут: https://agithub.com/dmitrysenpai/Cardsvs-Reload/releases")
 
 if __name__ == "__main__":
     server = server()

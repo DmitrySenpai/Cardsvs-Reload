@@ -16,9 +16,9 @@
 
 1. Скачайте последнию версию сервера в разделе ["Realse"](https://github.com/DmitrySenpai/Cardsvs-Reload/releases)
 2. Установите Python любой версии не ниже 3.9.0. https://www.python.org/downloads/
-3. После установки, установите библеотеку flask, с помощью команды:
+3. После установки, установите дополнительные библиотеки, с помощью команды:
 ```bash
-pip install flask
+pip install -r requirements.txt
 ```
 4. Для запуска используейте вот эту команду:
 ```bash

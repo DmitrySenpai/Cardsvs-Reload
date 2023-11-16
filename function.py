@@ -2,6 +2,7 @@ import random
 import string
 import time
 import json
+import requests
 
 class function:
     @staticmethod
@@ -33,3 +34,11 @@ class function:
             card.append({"id":x["id_card"], "nh":i})
             i=i+1
         return f"Fight_cards('{json.dumps(card)}', 2)"
+    @staticmethod
+    def check_update(self):
+        try:
+            if json.loads(requests.get("https://api.github.com/repos/dmitrysenpai/Cardsvs-Reload/releases").content)[0]["tag_name"] != self.version:
+                return True
+            return False
+        except:
+            return False

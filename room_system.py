@@ -24,19 +24,28 @@ class room_system:
             if owner_random:
                 self.room_game[id_room]["owner"] = random.choice(list(self.room_game[id_room]["player"]))
 
-            if self.room_game[id_room]["status"] == "play":
+            if self.room_game[id_room]["status"] == "play" and self.room_game[id_room]["status_2"] == "wait":
                 for x in list(self.room_game[id_room]["player"]):
                     if len(self.room_game[id_room]["player"][x]["card"]) != 10:
                         while True:
                             if len(self.room_game[id_room]["player"][x]["card"]) == 10: break
-                            self.room_game[id_room]["player"][x]["card"].append({"id": random.randint(0 , len(self.assest["card"])-1)})
+                            self.room_game[id_room]["player"][x]["card"].append({"id": random.randint(1 , len(self.assest["card"])-1)})
 
             if self.room_game[id_room]["winner"] == -1 and self.room_game[id_room]["status"] == "play":
                 if self.room_game[id_room]["word"] == -1:
-                    self.room_game[id_room]["word"] = random.randint(0, len(self.assest["words"])-1)
+                    self.room_game[id_room]["word"] = random.randint(1, len(self.assest["words"])-1)
 
                 if len(self.room_game[id_room]["fite_card"]) == len(self.room_game[id_room]["player"])-1 and self.room_game[id_room]["status_2"] == "step":
                     self.room_game[id_room]["timer"] = 0
+
+                if len(self.room_game[id_room]["player"]) <= 2 and self.room_game[id_room]["status_2"] == "wait":
+                    self.room_game[id_room]["status_2"] = "pause"
+                    time.sleep(1)
+                    continue
+                elif self.room_game[id_room]["status_2"] == "pause":
+                    self.room_game[id_room]["status_2"] = "wait"
+                    continue
+
 
                 if self.room_game[id_room]["timer"] == -1:
                     self.room_game[id_room]["timer"] = 25
@@ -57,9 +66,10 @@ class room_system:
                         self.room_game[id_room]["word"] = -1
                         self.room_game[id_room]["guest_assistant"] = -1
                         self.room_game[id_room]["timer"] = -1
-                        self.room_game[id_room]["status_2"] = "step"
+                        #self.room_game[id_room]["status_2"] = "step"
                         self.room_game[id_room]["leading"] = 0
                         self.room_game[id_room]["round"] = self.room_game[id_room]["round"] + 1
+                        self.room_game[id_room]["status_2"] = "wait"
                         self.room_game[id_room]["fite_card"] = []
                     elif self.room_game[id_room]["status_2"] == "select" and self.room_game[id_room]["fite_card_sel"] == -1:
                         self.room_game[id_room]["status_2"] = "wait_3"
@@ -157,9 +167,8 @@ class room_system:
         # FiteRezult("tester1") - (ИМЯ Победителя, ИД_приза)
         # $("#next_game").html('1')
 
-        if self.room_game[room_id]["winner"] == -1:
-
-            code = f'vopros={self.room_game[room_id]["word"]};timeh={self.room_game[room_id]["timer"]};'
+        if self.room_game[room_id]["winner"] == -1 and self.room_game[room_id]["status_2"] != "pause":
+            code = f'round_pause=0; vopros={self.room_game[room_id]["word"]};timeh={self.room_game[room_id]["timer"]};'
             code = code + "if (typeof round_get == 'undefined') { round_get=0; Budilnick(); };"
             code = code + "if (typeof round_status == 'undefined') { round_status=0 };"
             code = code + "if (typeof card_count == 'undefined') { card_count=0 };"
@@ -176,10 +185,11 @@ class room_system:
             code = code + 'NewVed("' + self.database.user_get_id(self.room_game[room_id]["leading"])[1] + '");'
             code = code + '};'
             code = code + "if (card_count !== " + str(card_count) + " ) { " + card_list + "; card_count=" + str(card_count) + " }"
-        
+        elif self.room_game[room_id]["status_2"] == "pause" and self.room_game[room_id]["winner"] == -1:
+            code = "if (typeof round_pause == 'undefined') { round_pause=0; };"
+            code = code + "if (round_pause == 0) { round_pause=1; hod=1; gst=3; gamePause('" + room_id + "'); }"
         else:
-
-            code = "if (typeof round_status == 'undefined') { round_status=0 };"
+            code = "round_pause=0; if (typeof round_status == 'undefined') { round_status=0 };"
             code = code + 'if (round_status !== "winner") { round_status="winner"; FiteRezult("' + self.database.user_get_id(self.room_game[room_id]["winner"])[1] + '") };'
             code = code + '$("#next_game").html("' + str(self.room_game[room_id]["timer"]) + '")'
 
