@@ -8,6 +8,7 @@ from web_server import web_server
 from ajax import ajax
 from function import function
 from room_system import room_system
+from cache import cache
 
 class server:
     def __init__(self):
@@ -16,13 +17,16 @@ class server:
         self.app = Flask(__name__)
         self.ajax = ajax()
         self.function = function()
+
         self.user_cache = {}
+        self.cache = cache()
+
         self.database = database()
         self.command = command()
         self.assest = {}
         self.assest["card"] = []
         self.assest["words"] = []
-        self.version = "1.2"
+        self.version = "1.3"
 
         with open('assest/card.txt', 'r', encoding='utf-8') as file:
             for line in file:

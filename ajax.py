@@ -5,8 +5,7 @@ import hashlib
 
 class ajax:
     @staticmethod
-    def load(self, args):
-        get_user = self.database.user_get_hash(request.cookies.get('hash'))
+    def load(self, args, get_user):
         if get_user:
             if get_user[0][0] in self.search_room:
                 id_room = self.room_system.random_room(self)
@@ -34,15 +33,13 @@ class ajax:
         else:
             return "Main(1)"
     @staticmethod
-    def menuswich(self, args):
-        get_user = self.database.user_get_hash(request.cookies.get('hash'))
+    def menuswich(self, args, get_user):
         if get_user[0][0] in self.search_room:
             return f"Smenu_sel={args['name1']}; Main(1); Seachgame(1);"
         else:
             return f"Smenu_sel={args['name1']}; Main(1)"
     @staticmethod
-    def hod(self, args):
-        get_user = self.database.user_get_hash(request.cookies.get('hash'))
+    def hod(self, args, get_user):
         id_room = self.function.user_in_room(self, get_user[0][0])
 
         if self.room_game[id_room]["status_2"] == "step":
@@ -63,7 +60,7 @@ class ajax:
         else:
             return False
     @staticmethod
-    def vhod(self, args):
+    def vhod(self, args, get_user):
         if self.database.user_login(args["name1"], hashlib.md5(args["name2"].encode()).hexdigest()):
             hash_new = self.function.generate_random_string()
             user_login = self.database.user_select_email(args["name1"])[0]
@@ -74,8 +71,7 @@ class ajax:
         else:
             return 'alert("Не правильный логин или пароль!")'
     @staticmethod
-    def exit(self, args):
-        get_user = self.database.user_get_hash(request.cookies.get('hash'))
+    def exit(self, args, get_user):
         id_room = self.function.user_in_room(self, get_user[0][0])
         if id_room:
             self.room_game[id_room]["player"].pop(get_user[0][0])
@@ -86,8 +82,7 @@ class ajax:
             response.set_cookie('hash', '', expires=0)
         return response
     @staticmethod
-    def otmena(self, args):
-        get_user = self.database.user_get_hash(request.cookies.get('hash'))
+    def otmena(self, args, get_user):
         if get_user[0][0] in self.search_room:
             self.search_room.remove(get_user[0][0])
         if get_user[0][0] in self.user_cache:
@@ -95,8 +90,7 @@ class ajax:
 
         return "Main(1)"
     @staticmethod
-    def party_start(self, args):
-        get_user = self.database.user_get_hash(request.cookies.get('hash'))
+    def party_start(self, args, get_user):
         if args["name1"] == "true":
             id_room = self.function.user_in_room(self, get_user[0][0])
             if self.room_game[id_room]["owner"] == get_user[0][0] and len(self.room_game[id_room]["player"]) <= 2:
@@ -107,8 +101,7 @@ class ajax:
         else:
             return "False"
     @staticmethod
-    def seach(self, args):
-        get_user = self.database.user_get_hash(request.cookies.get('hash'))
+    def seach(self, args, get_user):
         try:
             if args["name1"] == "party":
                 id_room = self.room_system.create_room(self, get_user[0][0])
@@ -119,7 +112,7 @@ class ajax:
             self.search_room.append(get_user[0][0])
             return "Seachgame(1); room_search=1;"
     @staticmethod
-    def reg(self, args):
+    def reg(self, args, get_user):
         if not self.config["register"]:
             return "alert('Регистрация на сайте выключена администратором!')"
 
