@@ -57,7 +57,7 @@ class server:
         self.webserver.start()
 
         if self.function.check_update(self):
-            print("\n\nВышла новая версия сервера 'Cardsvs-Reload'.\nСкачать вы можете тут: https://agithub.com/dmitrysenpai/Cardsvs-Reload/releases")
+            print("\n\nВышла новая версия сервера 'Cardsvs-Reload'.\nСкачать вы можете тут: https://github.com/dmitrysenpai/Cardsvs-Reload/releases")
 
 if __name__ == "__main__":
     server = server()
