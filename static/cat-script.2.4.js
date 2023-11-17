@@ -175,11 +175,11 @@ if (!self.__WB_pmw) { self.__WB_pmw = function (obj) { this.__WB_source = obj; r
     return false;
   }
 
-  function Writemsg(msg) {
+  function Writemsg(username, msg) {
     f = $("#chat").scrollTop();
     ff = $("#chat").get(0).scrollHeight - chat.clientHeight;
 
-    $("#chat").html($("#chat").html() + msg);
+    $("#chat").html($("#chat").html() + "<b>" + username + ":</b> " + msg + "<br>");
     if (f == ff) { $('.chatblok').scrollTop(100000); }
   }
 

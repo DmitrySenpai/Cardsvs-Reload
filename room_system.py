@@ -113,7 +113,7 @@ class room_system:
     @staticmethod
     def create_room(self, id_owner):
         self.room_game[self.id_room] = {"owner": id_owner, "socket": "", "round": 1, "guest_assistant": -1, "status": "waiting", "winner": -1, "player": {}, "word": -1, "timer": -1, "status_2": "wait", "leading": 0, "fite_card": [], "fite_card_sel": -1}
-        self.room_game[self.id_room]["player"][id_owner] = {"source": 0, "welcome": 0, "card": []}
+        self.room_game[self.id_room]["player"][id_owner] = {"source": 0, "welcome": 0, "card": [], "chat": []}
         #self.function.user_cahce_write(self, id_owner, self.id_room)
         self.user_cache[id_owner][1]["room"] = self.id_room
         self.user_cache[id_owner][1]["last"] = int(time.time())
@@ -130,7 +130,7 @@ class room_system:
         return random.choice(list(self.room_game))
     @staticmethod
     def join_room(self, id_room, id_user):
-        self.room_game[id_room]["player"][id_user] = {"source": 0, "welcome": 0, "card": []}
+        self.room_game[id_room]["player"][id_user] = {"source": 0, "welcome": 0, "card": [], "chat": []}
         if self.room_game[id_room]["owner"] == id_user:
             owner = 1
         else:
