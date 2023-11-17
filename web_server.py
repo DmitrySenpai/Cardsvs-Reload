@@ -13,7 +13,6 @@ class web_server:
         @self.app.route('/ajax', methods=['POST'])
         def ajax():
             if hasattr(self.ajax, request.form["act"]):
-                print(self.user_cache)
                 hash_del = False
                 if request.cookies.get('hash'):
                     cache_user = self.cache.user_select_hash(self, request.cookies.get('hash'))

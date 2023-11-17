@@ -1,6 +1,5 @@
 import random
 import string
-import time
 import json
 import requests
 
@@ -10,20 +9,20 @@ class function:
         characters = string.ascii_letters + string.digits
         random_string = ''.join(random.choice(characters) for _ in range(length))
         return random_string
-    @staticmethod
-    def user_is_online(self, id):
-        if id in self.user_cache:
-            return True
-        else: 
-            return False
-    @staticmethod
-    def user_cahce_write(self, id, room):
-        self.user_cache[id] = {"last":int(time.time()), "room":room}
-        return True
+    #@staticmethod
+    #def user_is_online(self, id):
+    #    if id in self.user_cache:
+    #        return True
+    #    else: 
+    #        return False
+    #@staticmethod
+    #def user_cahce_write(self, id, room):
+    #    self.user_cache[id] = {"last":int(time.time()), "room":room}
+    #    return True
     @staticmethod
     def user_in_room(self, id):
         try:
-            return self.user_cache[id]["room"]
+            return self.user_cache[id][1]["room"]
         except:
             return False
     @staticmethod

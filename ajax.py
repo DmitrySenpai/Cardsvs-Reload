@@ -2,6 +2,7 @@ from flask import make_response, request
 import re
 import json
 import hashlib
+import time
 
 class ajax:
     @staticmethod
@@ -17,6 +18,7 @@ class ajax:
             else:
                 id_room = self.function.user_in_room(self, get_user[0][0])
                 if id_room:
+                    self.user_cache[get_user[0][0]][1]["last"] = int(time.time())
                     room_get = self.room_game[id_room]
                     owner = 0
                     if room_get["owner"] == get_user[0][0]:
@@ -86,14 +88,15 @@ class ajax:
         if get_user[0][0] in self.search_room:
             self.search_room.remove(get_user[0][0])
         if get_user[0][0] in self.user_cache:
-            self.user_cache.pop(get_user[0][0])
+            self.user_cache[get_user[0][0]][1]["room"] = False
 
         return "Main(1)"
     @staticmethod
     def party_start(self, args, get_user):
         if args["name1"] == "true":
             id_room = self.function.user_in_room(self, get_user[0][0])
-            if self.room_game[id_room]["owner"] == get_user[0][0] and len(self.room_game[id_room]["player"]) <= 2:
+            #if self.room_game[id_room]["owner"] == get_user[0][0] and len(self.room_game[id_room]["player"]) <= 2:
+            if self.room_game[id_room]["owner"] == get_user[0][0] and len(self.room_game[id_room]["player"]) >= 2:
                 self.room_game[id_room]["status"] = "play"
                 return "Fight(1, 1)"
             else:
