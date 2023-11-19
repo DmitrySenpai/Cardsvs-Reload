@@ -168,7 +168,7 @@ if (!self.__WB_pmw) { self.__WB_pmw = function (obj) { this.__WB_source = obj; r
 
   function Sendmsg() {
     if ($("#message").val()) {
-      Klik('chat', '', '', $("#message").val(), 0);
+      Klik('chat', $("#message").val(), '', '', 0);
       $("#message").val('');
     }
     $('.chatblok').scrollTop(100000);
@@ -628,7 +628,7 @@ if (!self.__WB_pmw) { self.__WB_pmw = function (obj) { this.__WB_source = obj; r
     }
 
     if (first) {
-      $("#custom_body").html('<center><div id="main1" class="main1"><div class="logotip1"></div><div class="logotip1_exit" id="logotip1_exit"></div><div class="logotip1_usr" id="logotip1_usr"></div></div><div id="content" class="content_notfite"><div class="content_mb1_menu" id="content1_menu">' + mm + '</div><div class="content_mb1" id="content1"></div><div class="content_mb2" id="content2"></div><div class="content_mb3" id="content3">TEST</div><div class="vkbanner" onclick=location.href="https://web.archive.org/web/20220701173013/https://vk.com/cardscad"><div class="vkbanner_b1">Мы в VK</div><div class="vkbanner_b2" ' + stl_pls[0] + '>Заходи, другом будешь!</div></div></div></center>');
+      $("#custom_body").html('<center><div id="main1" class="main1"><div class="logotip1"></div><div class="logotip1_exit" id="logotip1_exit"></div><div class="logotip1_usr" id="logotip1_usr"></div></div><div id="content" class="content_notfite"><div class="content_mb1_menu" id="content1_menu">' + mm + '</div><div class="content_mb1" id="content1"></div><div class="content_mb2" id="content2"></div><div class="content_mb3" id="content3"></div><div class="vkbanner" onclick=location.href="https://vk.com/cardscad"><div class="vkbanner_b1">Мы в VK</div><div class="vkbanner_b2" ' + stl_pls[0] + '>Заходи, другом будешь!</div></div></div></center>');
       SMenu(Smenu_sel, '[]');
     }
     if (!name) {
@@ -652,8 +652,6 @@ if (!self.__WB_pmw) { self.__WB_pmw = function (obj) { this.__WB_source = obj; r
 
     }
     if (have_font < 1) { $(".players_st_b1").css({ "font-size": "18px" }); }
-
-    //if (first && !name) { Banner_test(); }
   }
 
   function Avklik(id, tip, tip2, i) {
@@ -847,7 +845,6 @@ if (!self.__WB_pmw) { self.__WB_pmw = function (obj) { this.__WB_source = obj; r
 
     $("#content").html('<div onclick="Main(1)" style="position:absolute;margin:280px 0px 0px 5px;"><div style="font-size:20px;cursor:pointer;border: 1px solid black;padding:4px 5px 4px 5px;border-radius: 5px 5px;background:#FFFFFF;"><i class="fa fa-backward" style="margin: 0 6px 0 0;"></i>Вернуться</div></div><div style="float:left;width:691px;text-align:left;"><div style="background:#000000;width:1px;height:400px;position:absolute;margin-left:690px;"></div>' + blk1 + '</div><div style="float:left;padding-left:10px;text-align:left;">' + blk2 + '<div id="donat_text1" class="donat_text1" ' + stl_pls2 + '></div><div class="kot1"><div id="kot2" class="kot2"></div></div></div>');
     $("#content").prepend('<div style="position: absolute;margin: 292px 0px 0px 525px;cursor: pointer;width: 140px;font-size: 12px;font-family: \'Microsoft Sans Serif\',Arial,sans-serif;" onclick="Donat_contact()">Проблемы с оплатой? <span style="text-decoration:underline;">Свяжитесь с нами!</span></div>');
-    Banner_test(1);
     $(".webmoney_bl1").css("margin", "290px 0 0 210px");
 
     $("#show_text1").mouseleave(function () {
@@ -1215,22 +1212,6 @@ if (!self.__WB_pmw) { self.__WB_pmw = function (obj) { this.__WB_source = obj; r
       //$("#webmoney_f"+id).animate({"opacity": "1"}, 200,'swing',function(){});
     }
   }
-
-  function Banner_test(tip) {
-    var stlpls = '';
-    if (!tip) { stlpls = 'z-index:2;'; }
-    var rr = '<div class="webmoney_bl1" style="margin: 380px 0 0 -20px;' + stlpls + '"><div class="webmoney_bl2" ><div class="webmoney_b1"><div id="webmoney_f2" class="webmoney_f1"><!-- begin WebMoney Transfer : attestation label --><a href="https://web.archive.org/web/20220701173013/https://passport.webmoney.ru/asp/CertView.asp?wmid=561622569904" target="_blank"><img src="img/logo/wm1.png" alt="Здесь находится аттестат нашего WM идентификатора 000000000000" border="0" /></a><!-- end WebMoney Transfer : attestation label --></div></div><div class="webmoney_b1"><div id="webmoney_f1" class="webmoney_f1"><!-- begin WebMoney Transfer : accept label --><a href="https://web.archive.org/web/20220701173013/http://www.megastock.ru/" target="_blank"><img src="img/logo/88x31_wm_white_on_transparent_ru.png" alt="www.megastock.ru" border="0"/></a><!-- end WebMoney Transfer : accept label --></div></div><div class="webmoney_b1"><div id="webmoney_f3" class="webmoney_f1"><a href="https://web.archive.org/web/20220701173013/https://www.interkassa.com/" title="INTERKASSA" target="_blank"><img src="img/logo/ik_88x31_01.gif" alt="INTERKASSA" /></a></div></div></div><div style="width: 88px;height: 31px;background: none repeat scroll 0% 0% rgb(0, 0, 0);float: right;position: absolute;margin: 2px 0px 0px 723px;z-index: 1;display:none;"></div></div>';
-    $('#content').prepend(rr);
-    $("#webmoney_f1").mouseleave(function () { Webmaney_an(1, 0) });
-    $("#webmoney_f2").mouseleave(function () { Webmaney_an(2, 0) });
-    $("#webmoney_f3").mouseleave(function () { Webmaney_an(3, 0) });
-    $("#webmoney_f1").mouseenter(function () { Webmaney_an(1, 1) });
-    $("#webmoney_f2").mouseenter(function () { Webmaney_an(2, 1) });
-    $("#webmoney_f3").mouseenter(function () { Webmaney_an(3, 1) });
-
-  }
-
-
 
 }
 /*

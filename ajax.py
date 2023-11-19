@@ -31,7 +31,7 @@ class ajax:
                             main_load = ""
                         return f'name="{get_user[0][1]}";{main_load}{statusroom}'
                 else:
-                    return f'name="{get_user[0][1]}";Main(1)'
+                    return f'name="{get_user[0][1]}";Main(1); {self.function.chat_load(self)}'
         else:
             return "Main(1)"
     @staticmethod
@@ -61,6 +61,10 @@ class ajax:
             return "Razviazka(" + args["name1"] + ", 1); card_sel=" + args["name1"] + "; setTimeout(function () { Fight_cards('[]', 2); }, 1500);"
         else:
             return False
+    @staticmethod
+    def chat(self, args, get_user):
+        self.cache_chat_global.append({"username": get_user[0][1], "text": args["name1"]})
+        return f'Writemsg("{get_user[0][1]}", "{self.function.html_special_chars(args["name1"])}"); $(".chatblok").scrollTop(100000);'
     @staticmethod
     def vhod(self, args, get_user):
         if self.database.user_login(args["name1"], hashlib.md5(args["name2"].encode()).hexdigest()):

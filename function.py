@@ -9,16 +9,6 @@ class function:
         characters = string.ascii_letters + string.digits
         random_string = ''.join(random.choice(characters) for _ in range(length))
         return random_string
-    #@staticmethod
-    #def user_is_online(self, id):
-    #    if id in self.user_cache:
-    #        return True
-    #    else: 
-    #        return False
-    #@staticmethod
-    #def user_cahce_write(self, id, room):
-    #    self.user_cache[id] = {"last":int(time.time()), "room":room}
-    #    return True
     @staticmethod
     def user_in_room(self, id):
         try:
@@ -41,3 +31,17 @@ class function:
             return False
         except:
             return False
+    @staticmethod
+    def chat_load(self):
+        code = '$("#chat").html(""); '
+        for x in self.cache_chat_global:
+            code = code + f'Writemsg("{x["username"]}", "{self.function.html_special_chars(x["text"])}"); '
+        
+        return code + ' $(".chatblok").scrollTop(100000);'
+    def html_special_chars(self, text):
+        return text \
+        .replace(u"&", u"&amp;") \
+        .replace(u'"', u"&quot;") \
+        .replace(u"'", u"&#039;") \
+        .replace(u"<", u"&lt;") \
+        .replace(u">", u"&gt;")

@@ -9,6 +9,7 @@ from ajax import ajax
 from function import function
 from room_system import room_system
 from cache import cache
+from smtp import smtp
 
 class server:
     def __init__(self):
@@ -18,6 +19,18 @@ class server:
         self.ajax = ajax()
         self.function = function()
 
+        if len(self.config["SMTP_HOST"]) == 0 and len(self.config["SMTP_LOGIN"]) == 0:
+            self.smtp = False
+        else:
+            self.smtp = smtp({
+                "HOST": self.config["SMTP_HOST"],
+                "HOST_PORT": self.config["SMTP_HOST_PORT"],
+                "LOGIN": self.config["SMTP_LOGIN"],
+                "PASSWORD": self.config["SMTP_PASSWORD"],
+                "SSL": self.config["SMTP_SSL"],
+                "FROM": self.config["SMTP_FROM"]
+            })
+
         self.user_cache = {}
         self.cache = cache()
 
@@ -26,7 +39,7 @@ class server:
         self.assest = {}
         self.assest["card"] = []
         self.assest["words"] = []
-        self.version = "1.3"
+        self.version = "1.4"
 
         with open('assest/card.txt', 'r', encoding='utf-8') as file:
             for line in file:
@@ -42,6 +55,8 @@ class server:
         self.room_system = room_system()
         self.web_server = web_server()
         self.server_shutdown = "False"
+
+        self.cache_chat_global = []
 
     def cmd_input(self):
         while True:

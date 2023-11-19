@@ -2,5 +2,12 @@
     "ip":"0.0.0.0",
     "port":5000,
     "register":true,
-    "kick_inactivity":25
+    "kick_inactivity":25,
+
+    "SMTP_HOST":"",
+    "SMTP_HOST_PORT": 465,
+    "SMTP_LOGIN":"",
+    "SMTP_PASSWORD":"",
+    "SMTP_FROM":"",
+    "SMTP_SSL":false
 }
